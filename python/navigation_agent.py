@@ -26,6 +26,7 @@ def location_finder(game_state, place):
 
 MAP_NAMES = {
     (0, 3): "Pallet Town",
+    (19, 3): "Route 1",
 }
 
 def get_map_name(map_bank, map_num):
