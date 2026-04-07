@@ -1,7 +1,7 @@
 import socket
-
 s = socket.socket()
-s.connect(('localhost', 8888))
+s.settimeout(5)
+s.connect(('localhost', 8889))
 
 def send_cmd(cmd):
     s.send((cmd + "<|END|>").encode())
@@ -15,4 +15,9 @@ def get_player_state():
     map_bank = int(send_cmd(f"core.read8,{ptr + 5}"))
     return {"x": x, "y": y, "map_num": map_num, "map_bank": map_bank}
 
-print(get_player_state())
+def press_button(btn):
+    send_cmd(f"mgba-http.button.tap,{btn}")
+
+print(f"Player state before moving up: {get_player_state()}")
+press_button("Up")
+print(f"Player state afer moving up: {get_player_state()}")
