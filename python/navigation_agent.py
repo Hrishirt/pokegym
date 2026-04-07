@@ -5,9 +5,11 @@ import ollama
 from fire_red import get_player_state
 
 # Getting the model we got 
-model = "llama3:latest"
+model = "llava:latest"
 
 # Basic function to test and generate a response from the model 
+# Edited the code out since we are no longer using memory for movements.
+'''
 def generate_response(game_state):
     prompt = f"""You are a navigation agent for the game FireRed. You are given the following game state: 
     {game_state['x']}, {game_state['y']}, {game_state['map_bank']}, {game_state['map_num']}. 
@@ -36,3 +38,22 @@ state = get_player_state()
 location = get_map_name(state['map_bank'], state['map_num'])
 print(location)
 print(location_finder(state, location))
+''' 
+
+def generate_image_prompt(image_path):
+    prompt = """This is a screenshot from Pokemon FireRed.
+                The player character is the person in the red hat in the center of the screen.
+                The path goes north (up).
+                Reply with ONLY one word: Up, Down, Left, or Right.
+                Which direction should the player move to follow the path?"""
+    response = ollama.chat(model, [
+        {
+            "role": "user", 
+            "content": prompt,
+            "images": [image_path]
+        }
+    ])
+    return response.message.content
+response = generate_image_prompt("/Users/hrishishah/MLEngineer/pokegym/images/screen.png")
+print(response)
+

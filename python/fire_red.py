@@ -25,3 +25,5 @@ press_button("Right")
 print(f"Player state afer moving Right: {get_player_state()}")
 '''
 print(get_player_state())
+send_cmd("core.screenshot,/Users/hrishishah/MLEngineer/pokegym/images/screen.png")
+print(f"Screenshot saved")
