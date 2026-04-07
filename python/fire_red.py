@@ -18,6 +18,10 @@ def get_player_state():
 def press_button(btn):
     send_cmd(f"mgba-http.button.tap,{btn}")
 
-print(f"Player state before moving up: {get_player_state()}")
-press_button("Up")
-print(f"Player state afer moving up: {get_player_state()}")
+# Movement testing 
+'''
+print(f"Player state before moving Right: {get_player_state()}")
+press_button("Right")
+print(f"Player state afer moving Right: {get_player_state()}")
+'''
+print(get_player_state())
