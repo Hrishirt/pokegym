@@ -1,7 +1,7 @@
 import socket
 s = socket.socket()
 s.settimeout(5)
-s.connect(('localhost', 8889))
+s.connect(('localhost', 8888))
 
 def send_cmd(cmd):
     s.send((cmd + "<|END|>").encode())
@@ -24,6 +24,18 @@ print(f"Player state before moving Right: {get_player_state()}")
 press_button("Right")
 print(f"Player state afer moving Right: {get_player_state()}")
 '''
-print(get_player_state())
-send_cmd("core.screenshot,/Users/hrishishah/MLEngineer/pokegym/images/screen.png")
-print(f"Screenshot saved")
+# print(get_player_state())
+# send_cmd("core.screenshot,/Users/hrishishah/MLEngineer/pokegym/images/screen.png")
+# print(f"Screenshot saved")
+# send_cmd("core.write32,0x02024298,1000")
+# print("level changed")
+
+# Base memory address for pokemon party and then using memory offsets to find the hp and max hp of the pokemon. 
+def get_battle_state():
+    base = 0x02024284
+    my_hp = int(send_cmd(f"core.read16,{base + 0x56}"))
+    my_max_hp = int(send_cmd(f"core.read16,{base + 0x58}"))
+    enemy_hp = int(send_cmd(f"core.read16,{0x02024090 + 0x56}"))
+    enemy_max_hp = int(send_cmd(f"core.read16,{0x02024090 + 0x58}"))
+    return {"my_hp": my_hp, "my_max_hp": my_max_hp, "enemy_hp": enemy_hp, "enemy_max_hp": enemy_max_hp}
+print(get_battle_state())
