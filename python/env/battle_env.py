@@ -14,7 +14,7 @@ class BattleEnv(gym.Env):
         )
 
     def reset(self, seed=None):
-        send_cmd("core.loadStateSlot,3")
+        send_cmd("core.loadStateSlot,2")
         time.sleep(3) 
         state = get_battle_state()
         obs = np.array([
@@ -32,6 +32,7 @@ class BattleEnv(gym.Env):
         # check if done
         # return obs, reward, terminated, truncated, info
         before = get_battle_state()
+        before_total = before["enemy_hp"] + before["my_hp"]
         if action == 0:
             press_button("A")  # select FIGHT
             time.sleep(0.5)
@@ -55,7 +56,11 @@ class BattleEnv(gym.Env):
         time.sleep(2)
         # read state AFTER action
         after = get_battle_state()
-        damage_dealt = before["enemy_hp"] - after["enemy_hp"]
+        if after["enemy_hp"] > before["enemy_hp"]:
+            damage_dealt = before["enemy_hp"]  # dealt remaining HP to finish them
+        else:
+            damage_dealt = before["enemy_hp"] - after["enemy_hp"]
+        
         damage_taken = before["my_hp"] - after["my_hp"]
         reward = damage_dealt - damage_taken
         terminated = after["enemy_hp"] <= 0 or after["my_hp"] <= 0

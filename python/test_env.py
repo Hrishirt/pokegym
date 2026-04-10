@@ -5,7 +5,7 @@ obs, info = env.reset()
 print(f"Initial state: {obs}")
 
 # take one random action
-action = 3  # use move 1
+action = 2  # use move 1
 obs, reward, terminated, truncated, info = env.step(action)
 print(f"After action: {obs}")
 print(f"Reward: {reward}")
