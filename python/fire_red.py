@@ -32,10 +32,30 @@ print(f"Player state afer moving Right: {get_player_state()}")
 
 # Base memory address for pokemon party and then using memory offsets to find the hp and max hp of the pokemon. 
 def get_battle_state():
-    base = 0x02024284
-    my_hp = int(send_cmd(f"core.read16,{base + 0x56}"))
-    my_max_hp = int(send_cmd(f"core.read16,{base + 0x58}"))
-    enemy_hp = int(send_cmd(f"core.read16,{0x02024090 + 0x56}"))
-    enemy_max_hp = int(send_cmd(f"core.read16,{0x02024090 + 0x58}"))
-    return {"my_hp": my_hp, "my_max_hp": my_max_hp, "enemy_hp": enemy_hp, "enemy_max_hp": enemy_max_hp}
+    player_base = 0x02024284
+    
+    # Base address for the START of the enemy party (Geodude)
+    enemy_party_base = 0x0202402C
+    
+    my_hp = int(send_cmd(f"core.read16,{player_base + 0x56}"))
+    my_max_hp = int(send_cmd(f"core.read16,{player_base + 0x58}"))
+    
+    # Read Geodude's HP first
+    enemy_hp = int(send_cmd(f"core.read16,{enemy_party_base + 0x56}"))
+    enemy_max_hp = int(send_cmd(f"core.read16,{enemy_party_base + 0x58}"))
+    
+    # If Geodude's HP is 0, he's fainted. Switch to tracking Onix.
+    if enemy_hp == 0:
+        onix_base = enemy_party_base + 0x64  # This equals your 0x02024090
+        enemy_hp = int(send_cmd(f"core.read16,{onix_base + 0x56}"))
+        enemy_max_hp = int(send_cmd(f"core.read16,{onix_base + 0x58}"))
+
+    return {
+        "my_hp": my_hp, 
+        "my_max_hp": my_max_hp, 
+        "enemy_hp": enemy_hp, 
+        "enemy_max_hp": enemy_max_hp
+    }
+    #return {"my_hp": my_hp, "my_max_hp": my_max_hp, "enemy_hp": enemy_hp, "enemy_max_hp": enemy_max_hp}
+# print(get_battle_state())
 print(get_battle_state())
