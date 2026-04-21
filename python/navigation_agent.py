@@ -40,6 +40,7 @@ print(location)
 print(location_finder(state, location))
 ''' 
 
+# Based off the image, generate a prompt to the model to determine the next action. 
 def generate_image_prompt(image_path):
     prompt = """This is a screenshot from Pokemon FireRed.
                 The player character is the person in the red hat in the center of the screen.
